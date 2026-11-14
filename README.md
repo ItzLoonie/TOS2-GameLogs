@@ -13,6 +13,12 @@ Based off TubaAntics' original Game Logs mod.
 - Color in chat logs
 - Fancy UI support
 
+## Screenshots
+All with Fancy UI I am NOT playing without it.
+<img width="1119" height="545" alt="image" src="https://github.com/user-attachments/assets/dbb01117-0819-4fb5-b56e-adb4042ff339" />
+<img width="472" height="427" alt="image" src="https://github.com/user-attachments/assets/f71049ca-1277-4b63-b49f-737ee522ee1b" />
+<img width="681" height="368" alt="image" src="https://github.com/user-attachments/assets/8bb20d80-4c62-4457-a6b0-d2819c3ee078" />
+
 
 
 ## AI Disclosure
