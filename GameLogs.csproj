@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace>GameLogs</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>GameLogs</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <!-- Embedded resource names are pinned with LogicalName to the ORIGINAL
+       "TemplatePlugin.*" names the code asks for at runtime. Do not remove the
+       LogicalName attributes: without them the names gain the RootNamespace
+       prefix and every embedded lookup (CSS, icons, modinfo) returns null. -->
+  <ItemGroup>
+    <EmbeddedResource Include="TemplatePlugin\modinfo.json" LogicalName="TemplatePlugin.modinfo.json" />
+    <EmbeddedResource Include="TemplatePlugin\resources\GameLogCSS.txt" LogicalName="TemplatePlugin.resources.GameLogCSS.txt" />
+    <EmbeddedResource Include="TemplatePlugin\resources\images\GameLogIcon.png" LogicalName="TemplatePlugin.resources.images.GameLogIcon.png" />
+    <EmbeddedResource Include="TemplatePlugin\resources\images\thumbnail.png" LogicalName="TemplatePlugin.resources.images.thumbnail.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>.\libs\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="Assembly-CSharp">
+      <HintPath>.\libs\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="SalemModLoader">
+      <HintPath>.\libs\SalemModLoader.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>.\libs\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>.\libs\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Fail fast with a helpful message when the game DLLs are missing. -->
+  <Target Name="CheckLibs" BeforeTargets="BeforeBuild">
+    <Error Text="libs/0Harmony.dll is missing. Copy it from Town of Salem 2/BepInEx/core/ into $(MSBuildThisFileDirectory)libs\ and rebuild." Condition="!Exists('$(MSBuildThisFileDirectory)libs/0Harmony.dll')" />
+    <Error Text="libs/Assembly-CSharp.dll is missing. Copy it from Town of Salem 2/TownOfSalem2_Data/Managed/ into $(MSBuildThisFileDirectory)libs\ and rebuild." Condition="!Exists('$(MSBuildThisFileDirectory)libs/Assembly-CSharp.dll')" />
+    <Error Text="libs/SalemModLoader.dll is missing. Copy your SalemModLoader.dll into $(MSBuildThisFileDirectory)libs\ and rebuild." Condition="!Exists('$(MSBuildThisFileDirectory)libs/SalemModLoader.dll')" />
+    <Error Text="libs/UnityEngine.CoreModule.dll is missing. Copy it from Town of Salem 2/TownOfSalem2_Data/Managed/ into $(MSBuildThisFileDirectory)libs\ and rebuild." Condition="!Exists('$(MSBuildThisFileDirectory)libs/UnityEngine.CoreModule.dll')" />
+    <Error Text="libs/UnityEngine.ImageConversionModule.dll is missing. Copy it from Town of Salem 2/TownOfSalem2_Data/Managed/ into $(MSBuildThisFileDirectory)libs\ and rebuild." Condition="!Exists('$(MSBuildThisFileDirectory)libs/UnityEngine.ImageConversionModule.dll')" />
+  </Target>
+
+</Project>

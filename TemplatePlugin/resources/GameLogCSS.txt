@@ -1,0 +1,240 @@
+<style>
+/* System lines only (the non-player-chat entries: death lines,
+   killed-by lines, verdicts, day/night headers and the like) get a
+   black text outline, so colored text stays readable on a colored
+   line background -- a red role mention on a red death line (e.g.
+   "destroyed by a Berserker") being the case that prompted this.
+   The outline is deliberately NOT global: a body-wide stroke
+   (v30) thinned out and washed out the summary's gradient names.
+   A shadow is used here instead of a stroke: on a black line
+   background it is invisible, so unaffected lines look exactly
+   as before. Gradient spans inside a system line get no shadow
+   (shadows show through their transparent fill) and instead a
+   drop-shadow halo, which is painted behind the glyphs and so
+   cannot bleed into them. */
+.sysline {
+  text-shadow: -1px 0 #000000, 1px 0 #000000, 0 -1px #000000, 0 1px #000000;
+}
+/* All chat text: the transcript is wrapped in a chatlog div, so
+   the outline inherits into every chat form -- player chat, dead
+   chat, special channels and system lines alike. Gradient spans
+   get the drop-shadow halo instead, as with sysline; gradient
+   author names are exempted in their own <style> rule (see
+   ChatNameStyleHtml), since their gradient arrives via a class
+   rule rather than an inline style. Note the honest limit: on a
+   black line background a black shadow is invisible, so ordinary
+   chat looks unchanged -- the outline only ever shows where a
+   line background is colored. The summary, wills and tooltips
+   sit outside the wrapper and are untouched. */
+.chatlog {
+  text-shadow: -1px 0 #000000, 1px 0 #000000, 0 -1px #000000, 0 1px #000000;
+}
+.chatlog span[style*="background-clip"] {
+  text-shadow: none;
+  filter: drop-shadow(0 0 2px #000000);
+}
+
+.sysline span[style*="background-clip"] {
+  text-shadow: none;
+  filter: drop-shadow(0 0 2px #000000);
+}
+
+.tooltipwill {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltipwill .tooltiptext {
+  visibility: hidden;
+  background-color: #996829;
+    width: 350px;
+  max-width: 1000px;
+  color: #323232;
+  text-align: left;
+  font-family: calibri;
+  font-size: 20px;
+  border-style: solid;
+  border-width: 5px;
+  border-color: #7d5420;
+  border-radius: 10px;
+  padding: 10px 0;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.tooltipwill:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltipdeath {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltipdeath .tooltiptext {
+  visibility: hidden;
+  width: 350px;
+  max-width: 1000px;
+  background-color: #7d5420;
+  color: #161616;
+  text-align: left;
+  font-family: calibri;
+  font-size: 20px;
+  border-style: solid;
+  border-width: 5px;
+  border-color: #990000;
+  border-radius: 10px;
+  padding: 10px 0;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.tooltipdeath:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltipprev {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltipprev .tooltiptext {
+  visibility: hidden;
+  width: max-content;
+  max-width: 1000px;
+  background-color: black;
+  color: #323232;
+  text-align: left;
+  font-family: calibri;
+  font-size: 24px;
+  padding: 6px 10px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #a0a0a0;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.tooltipprev:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltipfaction {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltipfaction .tooltiptext {
+  visibility: hidden;
+  width: max-content;
+  max-width: 1000px;
+  background-color: black;
+  color: #323232;
+  text-align: left;
+  font-family: calibri;
+  font-size: 24px;
+  padding: 6px 10px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #a0a0a0;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.tooltipfaction:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltipdeathinfo {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltipdeathinfo .tooltiptext {
+  visibility: hidden;
+  width: max-content;
+  max-width: 1000px;
+  background-color: black;
+  color: #FFFFFF;
+  text-align: left;
+  font-family: calibri;
+  font-size: 20px;
+  padding: 6px 10px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #a0a0a0;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.tooltipdeathinfo:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltipdeck {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltipdeck .tooltiptext {
+  visibility: hidden;
+  width: max-content;
+  max-width: 1000px;
+  background-color: black;
+  color: #FFFFFF;
+  text-align: left;
+  font-family: calibri;
+  font-size: 20px;
+  padding: 10px 14px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #a0a0a0;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.tooltipdeck:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.tooltipdeck .deck-columns {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+.tooltipdeck .deck-col {
+  white-space: nowrap;
+}
+
+.tooltipdeck .deck-col-title {
+  font-weight: bold;
+  font-size: 18px;
+  color: #a0a0a0;
+  border-bottom: 1px solid #a0a0a0;
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+}
+
+</style>

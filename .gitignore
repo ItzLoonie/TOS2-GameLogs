@@ -1,0 +1,7 @@
+# SML
+libs/
+obj/
+bin/
+tools/
+/.vs
+dummy-logs/*.html
