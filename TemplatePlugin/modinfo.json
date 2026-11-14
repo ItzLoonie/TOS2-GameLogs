@@ -1,6 +1,6 @@
 {
   "HarmonyId": "tubaantics.gamelogs",
-  "DisplayName": "Game Logs Plus",
+  "DisplayName": "Game Logs",
   "Authors": [ "TubaAntics" ,"Curtis", "Loonie"],
   "Description": "Generates game logs after each game you played and saves them to your game directory.",
   "Version": "1.6",
