@@ -137,11 +137,6 @@ public class GameLogs
 			}
 			ChatLogEntryBase chatLogEntry = __instance.chatLogMessage.chatLogEntry;
 			ChatItemData chatItemData = data as ChatItemData;
-			// Key on (entry, item type): one entry can fan out to several
-			// items with different text (a WhoDiedAndHow entry becomes
-			// WhoDied, WhoKilled and WhoDiedRole items). Log-window item
-			// types fold onto their chat-window type first, since both
-			// windows render the same entry with the same text.
 			int hashCode = chatLogEntry.GetHashCode();
 			if (chatItemData != null)
 			{
@@ -255,10 +250,7 @@ public class GameLogs
 					string gameName = entry.gameName;
 					int pos = entry.playerPosition + 1;
 					string roleName = RoleExtensions.GetRoleData(entry.role).roleName;
-					// Color by final faction, not the role's default: conversions
-					// and flexible-faction roles end under a different faction.
 					string roleColor = ColorUtility.ToHtmlStringRGB(ExtensionMethods.ParseColor(ClientRoleExtensions.GetFactionColor(entry.factionType)));
-					// Fancy's gradient also supplies the flat color: its top stop.
 					Gradient fancyGradient = FancyGradients.TryGetGradient(entry.factionType, entry.role);
 					string paintColor = fancyGradient != null ? ColorUtility.ToHtmlStringRGB(fancyGradient.colorKeys[0].color) : roleColor;
 					string accountName = ((entry.accountName != "") ? entry.accountName : PlayerAccountNames[entry.gameName]);
@@ -274,8 +266,6 @@ public class GameLogs
 					{
 						nameHtml = "<span><div class=\"tooltipdeathinfo\">" + nameHtml + "<span class=\"tooltiptext\">" + DeathInfoHtml(killRecord) + "</span></div></span>";
 					}
-					// Plain-text faction: stays readable when a Fancy scheme
-					// makes the painted name unreadable.
 					string roleHtml = "<span><div class=\"tooltipfaction\">" + BuildRoleNameHtml(roleName, entry.factionType, paintColor, fancyGradient) + "<span class=\"tooltiptext\">" + BuildRoleNameHtml(entry.factionType.ToDisplayString(), entry.factionType, paintColor, fancyGradient) + "</span></div></span>";
 					GameData.Add($"<span><br>[{pos}] {nameHtml} - </span>{roleHtml}");
 					if (entry.modifier == Role.VIP)
@@ -352,12 +342,6 @@ public class GameLogs
 		private static readonly Regex TmpJudgeColor = new Regex("<color=#C77364>", RegexOptions.IgnoreCase);
 		private static readonly Regex TmpAnyTag = new Regex("<[^>]*>");
 
-		// Chat text arrives as TMP rich text, which browsers ignore, so
-		// translate it to HTML keeping the game's own colors. Gated on
-		// the user's mention-colors setting. Fancy's <gradient> presets
-		// are opaque keys, so role/keyword mentions are repainted
-		// semantically first (role/faction from the link); the rest
-		// falls through to the generic pass.
 		private static string TranslateTmpToHtml(string text)
 		{
 			if (string.IsNullOrEmpty(text) || !text.Contains("<"))
@@ -431,9 +415,6 @@ public class GameLogs
 				{
 					return m.Value;
 				}
-				// No faction data for player mentions: a player named like
-				// a role would read as a role mention. Fancy's mention
-				// gradient instead.
 				string mentionStyle = FancyGradients.TryGetMentionStyle();
 				if (mentionStyle == null)
 				{
@@ -456,7 +437,6 @@ public class GameLogs
 				return "<span>";
 			});
 			text = text.Replace("</style>", "</span>");
-			// Court labels use the Judge's flat color; under Fancy, its gradient.
 			Gradient judgeGradient = FancyGradients.TryGetGradient((FactionType)38, Role.NONE);
 			if (judgeGradient != null)
 			{
@@ -469,7 +449,6 @@ public class GameLogs
 			return text;
 		}
 
-		// Outcome colors from GameSimulation.GetSkinInlineHeadshotString.
 		private static string OutcomeNameHtml(string gameName, PreviousGameEntry entry)
 		{
 			if (entry.won)
@@ -483,15 +462,13 @@ public class GameLogs
 			return gameName;
 		}
 
-		// GameType 100 (BTOS2) has no name in the base enum; without
-		// this it would print as a bare "100".
+		// BTOS2 casual name instead of just "100"
 		private static string GameTypeName()
 		{
 			var gameType = Pepper.GetCurrentGameMode().gameType;
 			return (int)gameType == 100 ? "CasualBTOS2" : gameType.ToString();
 		}
 
-		// Header mirrors the game's own player popup ("Died..."/"Left town...").
 		private static string DeathInfoHtml(KillRecord record)
 		{
 			bool leftTown = record.killedByReasons.Contains(KilledByReason.LEAVING_TOWN);
@@ -528,9 +505,6 @@ public class GameLogs
 			return string.Join("<br>", lines);
 		}
 
-		// Order from the builder's sorted getters, not the raw lists
-		// (insertion order). The getters sort the live builder in
-		// place, as the game's deck UI does.
 		private static string DeckTooltipHtml()
 		{
 			if (DeckBuilder == null)
@@ -593,8 +567,6 @@ public class GameLogs
 			return html;
 		}
 
-		// Fall back to the internal name on an unlocalized key, rather
-		// than print a key or a blank.
 		private static string DeckModifierRoleHtml(Role role)
 		{
 			string name = role.ToDisplayString();
@@ -605,11 +577,6 @@ public class GameLogs
 			return "<span style=\"color:#FFFFFF\">" + name + "</span>";
 		}
 
-		// The display string, not the internal name: BTOS2's Outlier
-		// bucket is "Neutral Special" internally, "Neutral Outlier" on
-		// display. TMP markup is stripped and the name repainted so
-		// Fancy gradients still apply. Unlocalized keys fall back to
-		// the internal name.
 		private static string DeckRoleHtml(Role role, FactionType faction)
 		{
 			string name = TmpAnyTag.Replace(role.ToColorizedDisplayString(faction), "");
@@ -641,7 +608,6 @@ public class GameLogs
 			return "<span style=\"color:#" + roleColor + "\">" + (padded ? " " + roleName + " " : roleName) + "</span>";
 		}
 
-		// The game renders these gradients vertically, so the log does too.
 		private static string GradientStyleFor(FactionType faction)
 		{
 			if (faction.IsGradientColor())

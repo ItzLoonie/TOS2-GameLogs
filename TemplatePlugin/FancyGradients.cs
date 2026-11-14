@@ -7,9 +7,7 @@ using UnityEngine;
 namespace TemplatePlugin;
 
 /// <summary>
-/// Fancy UI gradients via reflection (no compile-time reference): the
-/// same GetChangedGradient call Fancy paints with in-game, so the log
-/// matches what the player saw. Null on anything missing.
+/// Fancy UI gradients via reflection.
 /// </summary>
 public static class FancyGradients
 {
@@ -57,8 +55,6 @@ public static class FancyGradients
 		}
 	}
 
-	// Fancy's own two-stop gradients for keyword, player and
-	// achievement mentions (its *Start/*End options, hex strings).
 	public static string TryGetKeywordStyle()
 	{
 		return TryGetTwoColorStyle("KeywordStart", "KeywordEnd");
