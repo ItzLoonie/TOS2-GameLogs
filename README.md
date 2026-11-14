@@ -1,5 +1,5 @@
 # Game Logs
-An updated version of Game Logs, accounting for newer features.<br>
+An updated version of Game Logs, taking newer features that didn't exist at the time into account.<br>
 Based off TubaAntics' original Game Logs mod.
 
 - Supports Flexible Factions
